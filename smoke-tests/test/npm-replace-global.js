@@ -125,7 +125,7 @@ t.test('publish and replace global self', async t => {
     await npmPackage({
       manifest: { packuments: [publishedPackument] },
       tarballs: { [version]: tarball },
-      times: 3,
+      times: setup.SMOKE_PUBLISH ? 3 : 2,
     })
     await fs.rm(cache, { recursive: true, force: true })
     await useNpm('install', 'npm@latest', '--global')
@@ -135,7 +135,7 @@ t.test('publish and replace global self', async t => {
   const tarball = await npmLocalTarball()
 
   if (setup.SMOKE_PUBLISH) {
-    // await npmPackage()
+    await npmPackage()
   }
   registry.nock.put('/npm', body => {
     if (body._id === 'npm' && body.versions[version]) {
